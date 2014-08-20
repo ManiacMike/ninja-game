@@ -14,28 +14,28 @@ public:
     static CCScene* scene();
     
     // a selector callback
-    void menuCloseCallback(CCObject* pSender);
+//    void menuCloseCallback(CCObject* pSender);
     
     // preprocessor macro for "static create()" constructor ( node() deprecated )
     CREATE_FUNC(HelloWorld);
     
-    void addTarget();
+    void addTarget();//增加一个怪兽
     
-    void disappear(CCNode* who);
+    void disappear(CCNode* who);//删除怪兽
     
-    void gameLogic(float duration);
+    void addTargetUpdate(float duration);//增加怪兽，调度函数回调函数
     
     void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent); // 触摸事件响应函数
     
     void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent); // 触摸事件响应函数
     
-    void update(float delta); // delta = 1.0 / fps
+    void update(float delta); //调度函数 delta = 1.0 / fps
     
-    CCArray* _targets;
+    CCArray* _targets;//怪兽对象数组
     
-    CCArray* _projs;
+    CCArray* _projs;//飞镖对象数组
     
-    ~HelloWorld();
+    ~HelloWorld();//场景析构函数
 };
 
 #endif // __HELLOWORLD_SCENE_H__

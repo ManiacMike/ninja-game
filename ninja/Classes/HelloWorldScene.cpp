@@ -29,14 +29,21 @@ bool HelloWorld::init()
     {
         return false;
     }
-    
+    //获取屏幕大小
     CCSize screenSize = CCDirector::sharedDirector()->getVisibleSize();
+    //创建忍者到精灵
     CCSprite *player = CCSprite::create("Player.png");
+    //设置位置
     player->setPosition(ccp(0+20,screenSize.height/2));
+    //加到层里去
     this->addChild(player);
-    this->schedule(schedule_selector(HelloWorld::gameLogic), 0.5);
+    //设置调度函数每0.5秒执行一次
+    this->schedule(schedule_selector(HelloWorld::addTargetUpdate), 0.5);
+    //开启触摸
     this->setTouchEnabled(true);
-    this->schedule(schedule_selector(HelloWorld::update));
+    //设置调度函数，没祯执行一次
+    scheduleUpdate();
+//    this->schedule(schedule_selector(HelloWorld::update));
     _targets = new CCArray;
     _projs = new CCArray;
     
@@ -51,7 +58,7 @@ HelloWorld::~ HelloWorld(){
         _projs->release();
     }
 }
-void HelloWorld::gameLogic(float duration){
+void HelloWorld::addTargetUpdate(float duration){
     this->addTarget();
 }
 //生成一个怪物
@@ -61,7 +68,7 @@ void HelloWorld::addTarget()
     CCSize screenSize = CCDirector::sharedDirector()->getVisibleSize();
     int y = rand()%(int)screenSize.height;
     target->setPosition(ccp(screenSize.width-20, y));
-    target->setTag(1);
+    target->setTag(1);//飞镖和怪兽用一个方法删除，那就用tag来标记下
     CCMoveTo *move = CCMoveTo::create(3, ccp(0, y));
     CCCallFuncN *disappear = CCCallFuncN::create(this, callfuncN_selector(HelloWorld::disappear));
     CCSequence *actions = CCSequence::create(move,disappear,NULL);
@@ -130,7 +137,7 @@ void HelloWorld::update(float delta) // delta = 1.0 / fps
     CCArray* projToDelete = new CCArray;
     CCObject* itarget;
     CCObject* iproj;
-    
+    //下面一大坨就是在遍历各飞镖和各怪兽是否有接触
     CCARRAY_FOREACH(_targets, itarget){
         CCSprite* target = (CCSprite *)itarget;
         CCRect targetZone = CCRectMake(target->getPositionX(), target->getPositionY(), target->getContentSize().width, target->getContentSize().height);
@@ -158,11 +165,11 @@ void HelloWorld::update(float delta) // delta = 1.0 / fps
     }
 }
 
-void HelloWorld::menuCloseCallback(CCObject* pSender)
-{
-    CCDirector::sharedDirector()->end();
-    
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    exit(0);
-#endif
-}
+//void HelloWorld::menuCloseCallback(CCObject* pSender)
+//{
+//    CCDirector::sharedDirector()->end();
+//    
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//    exit(0);
+//#endif
+//}
